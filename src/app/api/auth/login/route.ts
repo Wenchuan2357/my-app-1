@@ -6,30 +6,30 @@ import { eq } from 'drizzle-orm';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const { username, password } = await request.json();
 
-    console.log('Login attempt:', { email });
+    console.log('Login attempt:', { username });
 
-    if (!email || !password) {
-      console.error('Missing email or password');
+    if (!username || !password) {
+      console.error('Missing username or password');
       return NextResponse.json(
-        { error: 'Missing email or password' },
+        { error: 'Missing username or password' },
         { status: 400 }
       );
     }
 
-    // Find user by email
+    // Find user by username
     console.log('Looking up user...');
     const [user] = await db
       .select()
       .from(users)
-      .where(eq(users.email, email))
+      .where(eq(users.username, username))
       .limit(1);
 
     if (!user) {
-      console.log('User not found:', email);
+      console.log('User not found:', username);
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'Invalid username or password' },
         { status: 401 }
       );
     }
@@ -40,9 +40,9 @@ export async function POST(request: NextRequest) {
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      console.log('Password mismatch for user:', email);
+      console.log('Password mismatch for user:', username);
       return NextResponse.json(
-        { error: 'Invalid email or password' },
+        { error: 'Invalid username or password' },
         { status: 401 }
       );
     }

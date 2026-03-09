@@ -4,34 +4,60 @@ import { db } from '@/lib/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 
+// Password validation: must contain both letters and numbers, at least 8 characters
+function validatePassword(password: string): { valid: boolean; error?: string } {
+  if (password.length < 8) {
+    return { valid: false, error: 'Password must be at least 8 characters long' };
+  }
+
+  const hasLetter = /[a-zA-Z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+
+  if (!hasLetter || !hasNumber) {
+    return { valid: false, error: 'Password must contain both letters and numbers' };
+  }
+
+  return { valid: true };
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { username, email, password } = await request.json();
+    const { username, password } = await request.json();
 
-    console.log('Registration attempt:', { username, email });
+    console.log('Registration attempt:', { username });
 
-    if (!username || !email || !password) {
+    if (!username || !password) {
       console.error('Missing required fields');
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Username and password are required' },
         { status: 400 }
       );
     }
 
-    // Check if user already exists
+    // Validate password strength
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.valid) {
+      console.error('Password validation failed:', passwordValidation.error);
+      return NextResponse.json(
+        { error: passwordValidation.error },
+        { status: 400 }
+      );
+    }
+
+    // Check if username already exists
     console.log('Checking for existing user...');
     const existingUser = await db
       .select()
       .from(users)
-      .where(eq(users.email, email))
+      .where(eq(users.username, username))
       .limit(1);
 
     console.log('Existing user check result:', existingUser.length);
 
     if (existingUser.length > 0) {
-      console.log('Email already registered:', email);
+      console.log('Username already registered:', username);
       return NextResponse.json(
-        { error: 'Email already registered' },
+        { error: 'Username already exists' },
         { status: 400 }
       );
     }
@@ -48,7 +74,6 @@ export async function POST(request: NextRequest) {
       .insert(users)
       .values({
         username,
-        email,
         password: hashedPassword,
       })
       .returning();

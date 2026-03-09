@@ -28,9 +28,18 @@ export default function TodoApp() {
     }
   }, [router]);
 
+  const getAuthHeaders = (): Record<string, string> => {
+    const currentUser = getUser();
+    return currentUser
+      ? { 'Authorization': `Basic ${Buffer.from(currentUser.id.toString()).toString('base64')}` }
+      : {};
+  };
+
   const fetchTodos = async () => {
     try {
-      const response = await fetch('/api/todos');
+      const response = await fetch('/api/todos', {
+        headers: getAuthHeaders(),
+      });
       const data = await response.json();
       setTodos(data);
     } catch (error) {
@@ -52,7 +61,10 @@ export default function TodoApp() {
     try {
       const response = await fetch('/api/todos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
         body: JSON.stringify({ title: inputValue }),
       });
 
@@ -70,7 +82,10 @@ export default function TodoApp() {
     try {
       const response = await fetch(`/api/todos/${id}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...getAuthHeaders(),
+        },
         body: JSON.stringify({ completed: !completed }),
       });
 
@@ -87,6 +102,7 @@ export default function TodoApp() {
     try {
       const response = await fetch(`/api/todos/${id}`, {
         method: 'DELETE',
+        headers: getAuthHeaders(),
       });
 
       if (response.ok) {
