@@ -8,7 +8,10 @@ export async function POST(request: NextRequest) {
   try {
     const { username, email, password } = await request.json();
 
+    console.log('Registration attempt:', { username, email });
+
     if (!username || !email || !password) {
+      console.error('Missing required fields');
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
@@ -16,13 +19,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already exists
+    console.log('Checking for existing user...');
     const existingUser = await db
       .select()
       .from(users)
       .where(eq(users.email, email))
       .limit(1);
 
+    console.log('Existing user check result:', existingUser.length);
+
     if (existingUser.length > 0) {
+      console.log('Email already registered:', email);
       return NextResponse.json(
         { error: 'Email already registered' },
         { status: 400 }
@@ -30,10 +37,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Hash password
+    console.log('Hashing password...');
     const saltRounds = 10;
     const hashedPassword = await bcrypt.hash(password, saltRounds);
+    console.log('Password hashed successfully');
 
     // Create user
+    console.log('Creating user...');
     const [newUser] = await db
       .insert(users)
       .values({
@@ -42,6 +52,8 @@ export async function POST(request: NextRequest) {
         password: hashedPassword,
       })
       .returning();
+
+    console.log('User created successfully:', newUser.id);
 
     // Return user without password
     const { password: _, ...userWithoutPassword } = newUser;
@@ -52,8 +64,15 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error('Registration error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('Error message:', errorMessage);
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+
     return NextResponse.json(
-      { error: 'Registration failed' },
+      {
+        error: 'Registration failed',
+        details: errorMessage
+      },
       { status: 500 }
     );
   }
