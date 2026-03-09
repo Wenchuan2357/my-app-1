@@ -1,12 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-// Try bcrypt first, fallback to bcryptjs
-let bcrypt;
-try {
-  bcrypt = require('bcrypt');
-} catch {
-  bcrypt = require('bcryptjs');
-}
-
+import bcrypt from 'bcryptjs';
 import { db } from '@/lib/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';

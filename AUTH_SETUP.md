@@ -31,13 +31,14 @@ bcryptjs 是 bcrypt 的纯 JavaScript 实现，不需要本地编译：
 
 ```bash
 pnpm add bcryptjs
-pnpm add -D @types/bcryptjs
 ```
+
+注意：不需要安装 `@types/bcryptjs`，因为 bcryptjs 自带类型定义。
 
 或者使用 npm：
 
 ```bash
-npm install bcryptjs @types/bcryptjs
+npm install bcryptjs
 ```
 
 如果 npm 安装失败，可以使用 pnpm（如上面所示）或 yarn。
