@@ -49,8 +49,22 @@ export default function TodoApp() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    try {
+      // Call logout API first
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+    } catch (error) {
+      console.error('Logout API call failed:', error);
+    }
+
+    // Clear local storage (for backward compatibility)
+    localStorage.removeItem('user');
+    // Clear session storage
+    sessionStorage.removeItem('user');
+
     router.push('/login');
   };
 

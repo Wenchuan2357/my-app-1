@@ -8,7 +8,7 @@ export function getUser(): User | null {
   if (typeof window === 'undefined') return null;
 
   try {
-    const userStr = localStorage.getItem('user');
+    const userStr = sessionStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
   } catch {
     return null;
@@ -19,7 +19,7 @@ export function setUser(user: User): void {
   if (typeof window === 'undefined') return;
 
   try {
-    localStorage.setItem('user', JSON.stringify(user));
+    sessionStorage.setItem('user', JSON.stringify(user));
   } catch (error) {
     console.error('Failed to store user:', error);
   }
@@ -29,7 +29,10 @@ export function logout(): void {
   if (typeof window === 'undefined') return;
 
   try {
+    // Clear local storage (for backward compatibility)
     localStorage.removeItem('user');
+    // Clear session storage
+    sessionStorage.removeItem('user');
   } catch (error) {
     console.error('Failed to logout:', error);
   }

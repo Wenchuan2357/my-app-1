@@ -20,19 +20,26 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      // Always call logout API first to ensure clean state
+
+      const loginResponse = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      const data = await loginResponse.json();
 
-      if (!response.ok) {
+      if (!loginResponse.ok) {
         throw new Error(data.error || 'Login failed');
       }
 
-      // Store user info in localStorage
+      // Store user info in sessionStorage
       setUser(data.user as User);
 
       // Redirect to home page
