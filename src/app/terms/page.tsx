@@ -301,10 +301,7 @@ export default function TermsOfService() {
               </p>
 
               <div className="bg-gray-50 p-4 rounded-lg">
-                <p className="text-gray-700"><strong>Email:</strong> legal@todoapp.com</p>
-                <p className="text-gray-700"><strong>Address:</strong> 123 Tech Street, San Francisco, CA 94105</p>
-                <p className="text-gray-700"><strong>Phone:</strong> +1 (555) 123-4567</p>
-                <p className="text-gray-700"><strong>Legal Representative:</strong> John Doe, CEO</p>
+                <p className="text-gray-700"><strong>Email:</strong> 2958521211@qq.com</p>
               </div>
             </section>
 
