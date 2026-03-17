@@ -11,10 +11,18 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    // Validate terms agreement
+    if (!agreedToTerms) {
+      setError('You must agree to the Terms of Service and Privacy Policy to create an account.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -113,12 +121,36 @@ export default function RegisterPage() {
                 placeholder="Password (min 8 chars, letters + numbers)"
               />
             </div>
+
+            {/* Terms Agreement Checkbox */}
+            <div className="flex items-start space-x-3 mt-6">
+              <input
+                id="agree-terms"
+                name="agree-terms"
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                required
+              />
+              <label htmlFor="agree-terms" className="text-sm text-gray-700 leading-5">
+                I have read and agree to the{' '}
+                <Link href="/terms" className="text-blue-600 hover:text-blue-500 underline">
+                  Terms of Service
+                </Link>{' '}
+                and{' '}
+                <Link href="/privacy" className="text-blue-600 hover:text-blue-500 underline">
+                  Privacy Policy
+                </Link>
+                .
+              </label>
+            </div>
           </div>
 
           <div>
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || !agreedToTerms}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Creating account...' : 'Sign up'}

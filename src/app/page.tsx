@@ -205,6 +205,18 @@ export default function TodoApp() {
             ))}
           </ul>
         )}
+      {/* Footer Links */}
+        <div className="mt-12 pt-8 border-t border-gray-200">
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+            <Link href="/privacy" className="hover:text-blue-600 transition-colors">
+              Privacy Policy
+            </Link>
+            <span>|</span>
+            <Link href="/terms" className="hover:text-blue-600 transition-colors">
+              Terms of Service
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );
