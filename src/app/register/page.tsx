@@ -135,13 +135,19 @@ export default function RegisterPage() {
               />
               <label htmlFor="agree-terms" className="text-sm text-gray-700 leading-5">
                 I have read and agree to the{' '}
-                <Link href="/terms" className="text-blue-600 hover:text-blue-500 underline">
+                <a
+                  href="/terms"
+                  className="text-blue-600 hover:text-blue-500 underline"
+                >
                   Terms of Service
-                </Link>{' '}
+                </a>{' '}
                 and{' '}
-                <Link href="/privacy" className="text-blue-600 hover:text-blue-500 underline">
+                <a
+                  href="/privacy"
+                  className="text-blue-600 hover:text-blue-500 underline"
+                >
                   Privacy Policy
-                </Link>
+                </a>
                 .
               </label>
             </div>

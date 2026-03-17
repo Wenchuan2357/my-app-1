@@ -1,22 +1,19 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { getUser, logout, type User } from '@/lib/auth';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function TermsOfService() {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
-  useEffect(() => {
-    const currentUser = getUser();
-    if (!currentUser) {
-      router.push('/login');
-    } else {
-      setUser(currentUser);
-    }
-  }, [router]);
+  // Only check user state, don't redirect - allow public access
+  const currentUser = getUser();
+  if (currentUser) {
+    setUser(currentUser);
+  }
 
   const handleLogout = async () => {
     try {
@@ -33,22 +30,28 @@ export default function TermsOfService() {
     router.push('/login');
   };
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900">Terms of Service</h1>
-          <button
-            onClick={handleLogout}
-            className="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
-          >
-            Logout
-          </button>
+          {user && (
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 text-sm bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
+            >
+              Logout
+            </button>
+          )}
+          {!user && (
+            <Link
+              href="/register"
+              className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Register
+            </Link>
+          )}
         </div>
 
         <div className="bg-white shadow-lg rounded-lg p-8">
