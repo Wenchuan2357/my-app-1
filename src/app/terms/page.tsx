@@ -2,18 +2,20 @@
 
 import Link from 'next/link';
 import { getUser, logout, type User } from '@/lib/auth';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function TermsOfService() {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
 
-  // Only check user state, don't redirect - allow public access
-  const currentUser = getUser();
-  if (currentUser) {
-    setUser(currentUser);
-  }
+  // Only check user state on client side, don't redirect - allow public access
+  useEffect(() => {
+    const currentUser = getUser();
+    if (currentUser) {
+      setUser(currentUser);
+    }
+  }, []);
 
   const handleLogout = async () => {
     try {
