@@ -133,8 +133,17 @@ export default function TodoApp() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gray-50 py-12 px-4 relative">
+      {/* Decorative background image */}
+      <div className="absolute inset-0 opacity-50 pointer-events-none">
+        <img
+          src="/主界面图.png"
+          alt="Background decoration"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      <div className="max-w-2xl mx-auto relative z-10">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900">Todo List</h1>
           <div className="flex items-center gap-4">
@@ -206,7 +215,8 @@ export default function TodoApp() {
             ))}
           </ul>
         )}
-      {/* Footer Links */}
+
+        {/* Footer Links */}
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
             <Link href="/privacy" className="hover:text-blue-600 transition-colors">
